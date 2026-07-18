@@ -28,6 +28,23 @@ use block_oerexchangebrowse\local\content_builder;
  */
 final class content_builder_test extends \advanced_testcase {
     /**
+     * Construct a fresh block_oerexchangebrowse instance, ready for
+     * get_content() to be called directly (no DB block_instances row
+     * needed: get_content() below doesn't touch $this->page or
+     * $this->instance).
+     *
+     * @return \block_oerexchangebrowse
+     */
+    protected function new_block(): \block_oerexchangebrowse {
+        global $CFG;
+        require_once($CFG->dirroot . '/lib/blocklib.php');
+        block_load_class('oerexchangebrowse');
+        $block = new \block_oerexchangebrowse();
+        $block->init();
+        return $block;
+    }
+
+    /**
      * Insert a local_oerexchange_resources row with sane defaults, allowing
      * individual fields (status, timeshared, title) to be overridden.
      *
@@ -122,5 +139,41 @@ final class content_builder_test extends \advanced_testcase {
         $results = content_builder::get_recent_published();
 
         $this->assertSame([], $results);
+    }
+
+    /**
+     * block_oerexchangebrowse::get_content() is the actual output sink: it
+     * builds HTML by hand from stored title/summary/licenseshortname
+     * values. Confirm each field is escaped so a malicious resource record
+     * (e.g. injected via a compromised/malicious remote OER Exchange site
+     * through local_oerexchange's import path) can't run script in a
+     * viewer's session.
+     *
+     * @covers \block_oerexchangebrowse::get_content
+     */
+    public function test_get_content_escapes_resource_fields(): void {
+        $this->resetAfterTest();
+
+        $this->create_resource([
+            'title' => '<script>alert(1)</script>Evil title',
+            'summary' => '<img src=x onerror=alert(2)>Evil summary',
+            'licenseshortname' => '<b>cc-evil</b>',
+        ]);
+
+        $block = $this->new_block();
+        $content = $block->get_content();
+
+        // No unescaped tag from any stored field made it into the output.
+        $this->assertStringNotContainsString('<script>', $content->text);
+        $this->assertStringNotContainsString('<img src=x', $content->text);
+        $this->assertStringNotContainsString('<b>cc-evil</b>', $content->text);
+
+        // The escaped form of each payload is present, proving the field
+        // was actually rendered (not silently dropped) and went through
+        // an HTML-escaping function rather than being stripped/omitted.
+        $this->assertStringContainsString('&lt;script&gt;', $content->text);
+        $this->assertStringContainsString('Evil title', $content->text);
+        $this->assertStringContainsString('Evil summary', $content->text);
+        $this->assertStringContainsString('&lt;b&gt;cc-evil&lt;/b&gt;', $content->text);
     }
 }
