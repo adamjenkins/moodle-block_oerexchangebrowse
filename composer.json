@@ -1,0 +1,21 @@
+{
+    "name": "adamjenkins/moodle-block_oerexchangebrowse",
+    "description": "Dashboard block for the OER Exchange platform: a compact search box plus recent/featured published catalogue resources, linking out to the full browse/search page.",
+    "type": "moodle-block",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Adam Jenkins",
+            "email": "adam@wisecat.net"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/adamjenkins/moodle-block_oerexchangebrowse/issues",
+        "source": "https://github.com/adamjenkins/moodle-block_oerexchangebrowse"
+    },
+    "require": {
+        "moodle/moodle": ">=5.0 <5.3",
+        "moodle/composer-installer": "^1.0",
+        "adamjenkins/moodle-local_oerexchange": "*"
+    }
+}
