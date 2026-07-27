@@ -107,6 +107,9 @@ class block_oerexchangebrowse extends block_base {
         if (empty($resources)) {
             $output .= $OUTPUT->notification(get_string('noresources', 'block_oerexchangebrowse'), 'info');
         } else {
+            // One query for every thumbnail on show, not one per row.
+            $coverurls = \local_oerexchange\local\cover_image::urls_for(array_keys($resources));
+
             $output .= html_writer::start_tag('ul', ['class' => 'oerexchangebrowse-list list-unstyled mb-2']);
             foreach ($resources as $resource) {
                 $resourceurl = new moodle_url('/local/oerexchange/resource.php', ['id' => $resource->id]);
@@ -116,21 +119,35 @@ class block_oerexchangebrowse extends block_base {
                 // the literal "&amp;").
                 $summary = s(shorten_text(content_to_text($resource->summary ?? '', FORMAT_HTML), 80));
 
-                $output .= html_writer::start_tag('li', ['class' => 'oerexchangebrowse-item mb-2']);
-                $output .= html_writer::tag(
+                // Thumbnail left, text right. The thumbnail is inside the same
+                // link as the title but hidden from assistive tech, so it is a
+                // bigger click target without becoming a second announced link
+                // to the same place.
+                $thumb = html_writer::link(
+                    $resourceurl,
+                    \local_oerexchange\local\cover_image::listitem($coverurls[$resource->id] ?? null),
+                    ['tabindex' => '-1', 'aria-hidden' => 'true', 'class' => 'flex-shrink-0']
+                );
+
+                $text = html_writer::tag(
                     'div',
                     html_writer::link($resourceurl, s($resource->title)),
                     ['class' => 'oerexchangebrowse-title fw-bold']
                 );
                 if ($summary !== '') {
-                    $output .= html_writer::tag('div', $summary, ['class' => 'small text-muted']);
+                    $text .= html_writer::tag('div', $summary, ['class' => 'small text-muted']);
                 }
-                $output .= html_writer::tag(
+                $text .= html_writer::tag(
                     'div',
                     get_string('licenselabel', 'block_oerexchangebrowse', s($resource->licenseshortname)),
                     ['class' => 'small text-muted']
                 );
-                $output .= html_writer::end_tag('li');
+
+                $output .= html_writer::tag(
+                    'li',
+                    $thumb . html_writer::div($text, 'oerexchangebrowse-text flex-grow-1', ['style' => 'min-width:0;']),
+                    ['class' => 'oerexchangebrowse-item d-flex gap-2 align-items-start mb-3']
+                );
             }
             $output .= html_writer::end_tag('ul');
         }

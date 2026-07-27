@@ -15,9 +15,11 @@ dependency declared in `version.php`.
 - A search box that submits straight to `local_oerexchange`'s catalogue
   page (`index.php`) with the query pre-filled — the block itself does not
   duplicate any search logic.
-- Up to five of the most recently shared, published resources: title
-  (linked to the resource's detail page), a short trimmed summary, and the
-  license.
+- Up to five of the most recently shared, published resources: the
+  resource's cover-image thumbnail, its title (linked to the detail page), a
+  short trimmed summary, and the license. Rows read thumbnail-left,
+  text-right; a resource with no cover image gets a neutral panel of the
+  same size, so the list stays aligned either way.
 - A "View full catalogue" link to the full browse/search page.
 
 ## Installation
