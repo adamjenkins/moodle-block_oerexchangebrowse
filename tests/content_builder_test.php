@@ -24,8 +24,9 @@ use block_oerexchangebrowse\local\content_builder;
  * @package    block_oerexchangebrowse
  * @copyright  2026 Adam Jenkins <adam@wisecat.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \block_oerexchangebrowse\local\content_builder
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(content_builder::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\block_oerexchangebrowse::class, 'get_content')]
 final class content_builder_test extends \advanced_testcase {
     /**
      * Construct a fresh block_oerexchangebrowse instance, ready for
@@ -148,8 +149,6 @@ final class content_builder_test extends \advanced_testcase {
      * (e.g. injected via a compromised/malicious remote OER Exchange site
      * through local_oerexchange's import path) can't run script in a
      * viewer's session.
-     *
-     * @covers \block_oerexchangebrowse::get_content
      */
     public function test_get_content_escapes_resource_fields(): void {
         $this->resetAfterTest();

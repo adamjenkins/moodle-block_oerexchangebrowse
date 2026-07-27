@@ -1,7 +1,7 @@
 # block_oerexchangebrowse
 
 A Moodle Dashboard block for the **OER Exchange** platform: a compact search
-box plus a handful of recent/featured published resources from the catalogue,
+box plus a handful of recent published resources from the catalogue,
 linking out to the full browse/search page for anything beyond a quick
 glance.
 

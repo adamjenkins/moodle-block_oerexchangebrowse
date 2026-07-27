@@ -17,7 +17,7 @@
 use block_oerexchangebrowse\local\content_builder;
 
 /**
- * A compact search box plus a handful of recent/featured published
+ * A compact search box plus a handful of recent published
  * resources from the OER Exchange catalogue, linking out to
  * local_oerexchange's full browse/search page for anything beyond a
  * quick glance.
@@ -27,7 +27,7 @@ use block_oerexchangebrowse\local\content_builder;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_oerexchangebrowse extends block_base {
-    /** Number of recent/featured resource cards to show. */
+    /** Number of recent resource cards to show. */
     const RECENT_LIMIT = 5;
 
     /**
@@ -110,7 +110,11 @@ class block_oerexchangebrowse extends block_base {
             $output .= html_writer::start_tag('ul', ['class' => 'oerexchangebrowse-list list-unstyled mb-2']);
             foreach ($resources as $resource) {
                 $resourceurl = new moodle_url('/local/oerexchange/resource.php', ['id' => $resource->id]);
-                $summary = s(shorten_text(strip_tags($resource->summary ?? ''), 80));
+                // Note content_to_text() both strips tags and decodes entities —
+                // plain strip_tags() + s() double-escaped a summary stored
+                // with pre-encoded entities ("Fish &amp; chips" rendered as
+                // the literal "&amp;").
+                $summary = s(shorten_text(content_to_text($resource->summary ?? '', FORMAT_HTML), 80));
 
                 $output .= html_writer::start_tag('li', ['class' => 'oerexchangebrowse-item mb-2']);
                 $output .= html_writer::tag(

@@ -37,7 +37,9 @@ class content_builder {
         return $DB->get_records(
             'local_oerexchange_resources',
             ['status' => 'published'],
-            'timeshared DESC',
+            // The id DESC tiebreaker: rows shared in the same second would
+            // otherwise render in DB-engine-dependent order.
+            'timeshared DESC, id DESC',
             '*',
             0,
             $limit
