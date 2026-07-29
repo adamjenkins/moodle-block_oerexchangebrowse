@@ -3,6 +3,18 @@
 All notable changes to this project are documented in this file, in
 [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [1.0.0] - 2026-07-29
+
+First stable release. `$plugin->maturity` is now `MATURITY_STABLE`.
+
+No functional change since 0.1.2 — the whole OER Exchange suite moves to 1.0.0
+together, so a site never has a stable plugin depending on an alpha one.
+
+### Fixed
+
+- Backfilled the missing `[0.1.1]` entry below. That release shipped and was
+  described in its release notes, but was never recorded here.
+
 ## [0.1.2] - 2026-07-27
 
 ### Added
@@ -18,6 +30,30 @@ All notable changes to this project are documented in this file, in
   so it widens the click target without announcing the same destination
   twice.
 - Thumbnail URLs for the whole block are resolved in one batch query.
+
+## [0.1.1] - 2026-07-27
+
+Backfilled on 2026-07-29 — this release shipped and was described in its
+release notes at the time, but the entry never reached this file.
+
+### Fixed
+
+- Corrected the installation floor to Moodle 5.0 (`$plugin->requires`); the
+  previous value permitted installs on untested 4.5 sites.
+- Summaries stored with pre-encoded entities no longer render double-escaped.
+- Resources created in the same second now render in a stable order.
+
+### Changed
+
+- Dropped the unjustified XSS/spam risk bitmask flags from the add-block
+  capability, so role-audit screens describe it accurately.
+
+### Added
+
+- Behat coverage of the block on its primary home, the Dashboard.
+- A test covering `get_content()`'s HTML escaping of stored resource fields.
+- Japanese (ja) language pack.
+- GitHub Actions CI workflow (moodle-plugin-ci).
 
 ## [0.1.0] - 2026-07-19
 
