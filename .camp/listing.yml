@@ -1,0 +1,29 @@
+# camp listing manifest — descriptive content for your plugin's page.
+# Edit freely and commit; camp ingests this file at each tagged release.
+# Schema: https://camp-registry.org/schema/listing.schema.json
+name: "OER Exchange: browse"
+summary: "A Moodle Dashboard block for the OER Exchange platform: a compact search box plus a few recently published resources from the catalogue."
+description: |
+  A quick way into the catalogue from the Dashboard, linking out to the full
+  browse and search page for anything beyond a glance.
+
+  - A search box that submits straight to the catalogue page with the query
+    pre-filled. The block duplicates no search logic of its own.
+  - Up to five of the most recently shared, published resources: the cover-image
+    thumbnail, the title linked to its detail page, a short trimmed summary, and
+    the license. Rows read thumbnail-left, text-right; a resource with no cover
+    image gets a neutral panel of the same size, so the list stays aligned
+    either way.
+  - A "View full catalogue" link to the full browse and search page.
+
+  Requires `local_oerexchange`, the catalogue and API plugin for the OER
+  Exchange, on the same site. Moodle enforces the dependency, so installing this
+  block without it will fail.
+labels:
+  - fully-free
+links:
+  docs: https://github.com/adamjenkins/moodle-block_oerexchangebrowse#readme
+  issues: https://github.com/adamjenkins/moodle-block_oerexchangebrowse/issues
+# screenshots:
+#   - path: .camp/screenshots/overview.png
+#     caption: Main view
