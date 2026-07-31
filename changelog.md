@@ -3,6 +3,17 @@
 All notable changes to this project are documented in this file, in
 [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [1.0.2] - 2026-07-31
+
+### Fixed
+
+- The recent/featured resource card title rendered multilang markup as
+  literal text even with the site's multilang filter enabled. Now uses
+  `format_string()` with a system context, matching
+  `block_oerexchangeshares`'s already-correct pattern.
+- International English spelling ("License" → "Licence") corrected in a
+  displayed string.
+
 ## [1.0.1] - 2026-07-29
 
 ### Changed

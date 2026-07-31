@@ -1,13 +1,14 @@
-# Release notes — 1.0.1
+# Release notes — 1.0.2
 
-No change to the plugin itself. This release exists to fix release
-publication to the camp registry: the previous release workflow pinned
-camp-tools v0.2.25, whose index-entry schema predates the `source-repo-id`
-field the registry added to every claimed entry on 2026-07-28 (OIDC trusted
-publishing), so publication of v1.0.0 could not succeed. The workflow is
-replaced with the registry's current tokenless template (OIDC trusted
-publishing, camp-tools v0.2.35); no access token, fork or repository secret
-is needed any more.
+Resource titles in this block's recent/featured resource cards previously
+rendered any multilang markup as literal text, even with the site's multilang
+filter enabled — a live, user-reported bug on the Exchange. The card title now
+renders through the site's filters (matching `block_oerexchangeshares`'s
+already-correct pattern), so a bilingual resource shows in whichever language
+the viewer has selected. The licence label and summary teaser are unchanged.
 
-The installable plugin code is identical to 1.0.0 apart from the version
-metadata — the workflow file is excluded from the distribution ZIP.
+Also: a displayed string ("License" → "Licence") now uses International
+English spelling, matching Moodle core's own convention for user-facing
+prose. No string keys or Japanese strings changed.
+
+No database or capability changes. No action is required after upgrading.
