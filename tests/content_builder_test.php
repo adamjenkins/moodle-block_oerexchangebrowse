@@ -145,10 +145,18 @@ final class content_builder_test extends \advanced_testcase {
     /**
      * block_oerexchangebrowse::get_content() is the actual output sink: it
      * builds HTML by hand from stored title/summary/licenseshortname
-     * values. Confirm each field is escaped so a malicious resource record
-     * (e.g. injected via a compromised/malicious remote OER Exchange site
-     * through local_oerexchange's import path) can't run script in a
-     * viewer's session.
+     * values. Confirm each field is safe against a malicious resource
+     * record (e.g. injected via a compromised/malicious remote OER
+     * Exchange site through local_oerexchange's import path).
+     *
+     * The title field's sink changed from s() to format_string() (this
+     * task, to let an admin-enabled multilang filter render bilingual
+     * titles) — format_string() defaults to CLEANING html (stripping
+     * dangerous tags), not merely escaping them the way s() does, so a
+     * `<script>` in a title is removed outright rather than surviving as
+     * escaped `&lt;script&gt;` text. Summary and licenseshortname are
+     * unchanged by this task and keep their original escape-preserving
+     * behaviour (content_to_text()/s() strip/escape, never format_string).
      */
     public function test_get_content_escapes_resource_fields(): void {
         $this->resetAfterTest();
@@ -167,12 +175,42 @@ final class content_builder_test extends \advanced_testcase {
         $this->assertStringNotContainsString('<img src=x', $content->text);
         $this->assertStringNotContainsString('<b>cc-evil</b>', $content->text);
 
-        // The escaped form of each payload is present, proving the field
-        // was actually rendered (not silently dropped) and went through
-        // an HTML-escaping function rather than being stripped/omitted.
-        $this->assertStringContainsString('&lt;script&gt;', $content->text);
+        // Each field's remaining safe text was actually rendered (not
+        // silently dropped along with the tag). The title's tag is
+        // stripped by format_string()'s cleaning (no `&lt;script&gt;`
+        // survives); summary and licenseshortname still escape-preserve.
+        $this->assertStringNotContainsString('&lt;script&gt;', $content->text);
         $this->assertStringContainsString('Evil title', $content->text);
         $this->assertStringContainsString('Evil summary', $content->text);
         $this->assertStringContainsString('&lt;b&gt;cc-evil&lt;/b&gt;', $content->text);
+    }
+
+    /**
+     * Regression test: the title used to render through s($resource->title),
+     * so a multilang-marked-up title showed as raw
+     * `<span lang="en" class="multilang">...` markup instead of collapsing
+     * to one language. Enables the filter trio locally rather than relying
+     * on site config, and pins the double-escape guard (a title containing
+     * `&` must be escaped exactly once).
+     */
+    public function test_get_content_renders_title_through_multilang_and_escapes_ampersand_once(): void {
+        $this->resetAfterTest();
+        filter_set_global_state('multilang', TEXTFILTER_ON);
+        set_config('filterall', 1);
+        set_config('stringfilters', 'multilang');
+
+        $this->create_resource([
+            'title' => '<span lang="en" class="multilang">Arts &amp; Crafts</span>'
+                . '<span lang="ja" class="multilang">工芸</span>',
+        ]);
+
+        $block = $this->new_block();
+        $content = $block->get_content();
+
+        $this->assertStringContainsString('Arts &amp; Crafts', $content->text);
+        $this->assertStringNotContainsString('工芸', $content->text);
+        $this->assertStringNotContainsString('multilang', $content->text);
+        $this->assertStringNotContainsString('&amp;amp;', $content->text);
+        $this->assertSame(1, substr_count($content->text, '&amp;'));
     }
 }

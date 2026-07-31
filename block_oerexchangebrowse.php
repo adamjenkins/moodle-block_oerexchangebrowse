@@ -131,7 +131,10 @@ class block_oerexchangebrowse extends block_base {
 
                 $text = html_writer::tag(
                     'div',
-                    html_writer::link($resourceurl, s($resource->title)),
+                    html_writer::link(
+                        $resourceurl,
+                        format_string($resource->title, true, ['context' => \core\context\system::instance()])
+                    ),
                     ['class' => 'oerexchangebrowse-title fw-bold']
                 );
                 if ($summary !== '') {
