@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['licenselabel'] = 'License: {$a}';
+$string['licenselabel'] = 'Licence: {$a}';
 $string['noresources'] = 'No published resources yet.';
 $string['oerexchangebrowse:addinstance'] = 'Add a new OER Exchange: browse block';
 $string['oerexchangebrowse:myaddinstance'] = 'Add a new OER Exchange: browse block to Dashboard';
