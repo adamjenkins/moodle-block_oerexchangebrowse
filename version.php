@@ -39,4 +39,9 @@ $plugin->maturity  = MATURITY_STABLE;
 // must not be installable) without the parent plugin present. There is no
 // subplugin relationship available for block types, so this dependency
 // declaration is the real enforcement mechanism.
-$plugin->dependencies = ['local_oerexchange' => ANY_VERSION];
+// Pinned rather than ANY_VERSION since 1.0.3: the block renders licence codes
+// through \local_oerexchange\local\licence_display, which arrived in
+// local_oerexchange 1.0.4 (2026080102). With ANY_VERSION the installer would
+// happily pair this block with an older local_oerexchange and the block would
+// then fatal with "Class not found" the first time it rendered a card.
+$plugin->dependencies = ['local_oerexchange' => 2026080102];

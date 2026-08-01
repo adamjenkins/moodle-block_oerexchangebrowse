@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 use block_oerexchangebrowse\local\content_builder;
+use local_oerexchange\local\licence_display;
 
 /**
  * A compact search box plus a handful of recent published
@@ -154,9 +155,18 @@ class block_oerexchangebrowse extends block_base {
                 if ($summary !== '') {
                     $text .= html_writer::tag('div', $summary, ['class' => 'small text-muted']);
                 }
+                // The helper s()-escapes the shortname and applies the capitals
+                // (if local_oerexchange's setting is on) as a CSS class rather
+                // than transforming the text, so what {$a} receives is escaped
+                // HTML. local_oerexchange is a declared dependency of this
+                // block, so the helper is always present.
                 $text .= html_writer::tag(
                     'div',
-                    get_string('licenselabel', 'block_oerexchangebrowse', s($resource->licenseshortname)),
+                    get_string(
+                        'licenselabel',
+                        'block_oerexchangebrowse',
+                        licence_display::html($resource->licenseshortname)
+                    ),
                     ['class' => 'small text-muted']
                 );
 

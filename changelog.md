@@ -13,6 +13,19 @@ All notable changes to this project are documented in this file, in
   flattens, then shortens, then escapes once — the same order
   `local_oerexchange`'s own catalogue cards use.
 
+### Changed
+
+- `$plugin->dependencies` pins `local_oerexchange` to 2026080102 (1.0.4)
+  instead of `ANY_VERSION`. The block now calls a class that only exists from
+  that release; with `ANY_VERSION` the installer would pair it with an older
+  local_oerexchange and the block would fatal on first render.
+- The licence code on each card is rendered through
+  `\local_oerexchange\local\licence_display` (a declared dependency), which
+  wraps it in `<span class="oer-licence-name">` and leaves the capitals to
+  CSS. The block follows `local_oerexchange`'s **Show licence codes in
+  capitals** setting, so the code matches the rest of the site instead of
+  being styled independently.
+
 ## [1.0.2] - 2026-07-31
 
 ### Fixed
