@@ -213,4 +213,63 @@ final class content_builder_test extends \advanced_testcase {
         $this->assertStringNotContainsString('&amp;amp;', $content->text);
         $this->assertSame(1, substr_count($content->text, '&amp;'));
     }
+
+    /**
+     * Regression test for the card summary teaser: it used to run
+     * content_to_text() straight over the stored summary, applying no text
+     * filter at all, so a bilingual summary was flattened into BOTH
+     * languages run together rather than collapsing to the viewer's.
+     *
+     * The sink now filters first — format_text(FORMAT_HTML, context) — and
+     * only then strips tags, shortens and escapes exactly once, matching
+     * local_oerexchange's own catalogue cards (index.php).
+     *
+     * The title is deliberately plain ASCII here so every assertion below
+     * is about the summary alone.
+     */
+    public function test_get_content_renders_summary_through_multilang_and_escapes_ampersand_once(): void {
+        $this->resetAfterTest();
+        filter_set_global_state('multilang', TEXTFILTER_ON);
+        set_config('filterall', 1);
+        set_config('stringfilters', 'multilang');
+
+        $this->create_resource([
+            'title' => 'Plain title',
+            'summary' => '<p><span lang="en" class="multilang">Fish &amp; Chips overview</span>'
+                . '<span lang="ja" class="multilang">魚とチップスの概要</span></p>',
+        ]);
+
+        $block = $this->new_block();
+        $content = $block->get_content();
+
+        $this->assertStringContainsString('Fish &amp; Chips overview', $content->text);
+        // The other language must be gone, not merely appended after the
+        // English text — that concatenation was the pre-fix symptom.
+        $this->assertStringNotContainsString('魚とチップスの概要', $content->text);
+        $this->assertStringNotContainsString('multilang', $content->text);
+        $this->assertStringNotContainsString('&amp;amp;', $content->text);
+        $this->assertSame(1, substr_count($content->text, '&amp;'));
+    }
+
+    /**
+     * The summary teaser still escapes exactly once when the filter is off
+     * (the default site state), and a summary stored with pre-encoded
+     * entities is not double-escaped — the behaviour the pre-existing
+     * content_to_text() comment in get_content() documents. Guards the
+     * newly inserted format_text() step against reintroducing that.
+     */
+    public function test_get_content_summary_does_not_double_escape_pre_encoded_entities(): void {
+        $this->resetAfterTest();
+
+        $this->create_resource([
+            'title' => 'Plain title',
+            'summary' => '<p>Fish &amp; Chips</p>',
+        ]);
+
+        $block = $this->new_block();
+        $content = $block->get_content();
+
+        $this->assertStringContainsString('Fish &amp; Chips', $content->text);
+        $this->assertStringNotContainsString('&amp;amp;', $content->text);
+    }
 }

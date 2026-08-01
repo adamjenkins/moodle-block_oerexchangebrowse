@@ -113,11 +113,25 @@ class block_oerexchangebrowse extends block_base {
             $output .= html_writer::start_tag('ul', ['class' => 'oerexchangebrowse-list list-unstyled mb-2']);
             foreach ($resources as $resource) {
                 $resourceurl = new moodle_url('/local/oerexchange/resource.php', ['id' => $resource->id]);
+                // Filter FIRST, then strip tags and decode entities via
+                // content_to_text(), then shorten, then escape exactly once —
+                // the same order local_oerexchange's own catalogue cards use
+                // (index.php). Stripping before filtering ran no text filter
+                // at all, so a bilingual summary was flattened into both
+                // languages run together ("Overview概要") instead of
+                // collapsing to the viewer's language, and no other filter
+                // (auto-linking, MathJax) ever saw the text either.
+                //
                 // Note content_to_text() both strips tags and decodes entities —
                 // plain strip_tags() + s() double-escaped a summary stored
                 // with pre-encoded entities ("Fish &amp; chips" rendered as
                 // the literal "&amp;").
-                $summary = s(shorten_text(content_to_text($resource->summary ?? '', FORMAT_HTML), 80));
+                $summaryfiltered = format_text(
+                    $resource->summary ?? '',
+                    FORMAT_HTML,
+                    ['context' => \core\context\system::instance()]
+                );
+                $summary = s(shorten_text(content_to_text($summaryfiltered, FORMAT_HTML), 80));
 
                 // Thumbnail left, text right. The thumbnail is inside the same
                 // link as the title but hidden from assistive tech, so it is a

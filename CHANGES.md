@@ -1,14 +1,14 @@
-# Release notes — 1.0.2
+# Release notes — 1.0.3
 
-Resource titles in this block's recent/featured resource cards previously
-rendered any multilang markup as literal text, even with the site's multilang
-filter enabled — a live, user-reported bug on the Exchange. The card title now
-renders through the site's filters (matching `block_oerexchangeshares`'s
-already-correct pattern), so a bilingual resource shows in whichever language
-the viewer has selected. The licence label and summary teaser are unchanged.
+The card *summary* teaser was shortened to plain text before any text filter
+ran, so a bilingual summary written with the multilang filter came out with
+both languages run together — "Overview概要" — rather than collapsing to the
+language the reader is using. No other filter (auto-linking, MathJax) ever saw
+the text either.
 
-Also: a displayed string ("License" → "Licence") now uses International
-English spelling, matching Moodle core's own convention for user-facing
-prose. No string keys or Japanese strings changed.
+The summary is now filtered first and flattened afterwards, matching the order
+the Exchange's own catalogue cards use. Card *titles* were already correct as
+of 1.0.2; this completes the same fix for the text underneath them.
 
-No database or capability changes. No action is required after upgrading.
+No database changes; no action required after upgrading beyond the usual
+`admin/cli/upgrade.php`.

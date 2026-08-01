@@ -3,6 +3,16 @@
 All notable changes to this project are documented in this file, in
 [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [1.0.3] - 2026-08-01
+
+### Fixed
+
+- The card summary teaser ran `content_to_text()` before any text filter, so a
+  multilang summary was flattened into both languages run together and no
+  filter ever saw it. Now filters with `format_text(FORMAT_HTML)` first, then
+  flattens, then shortens, then escapes once — the same order
+  `local_oerexchange`'s own catalogue cards use.
+
 ## [1.0.2] - 2026-07-31
 
 ### Fixed
