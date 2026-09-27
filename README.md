@@ -33,7 +33,7 @@ Then add "OER Exchange: browse" to a Dashboard from the block drawer.
 
 ## Requirements
 
-- Moodle 5.0–5.2 (`$plugin->supported`).
+- Moodle 5.0–5.3 (`$plugin->supported`).
 - `local_oerexchange` installed on the same site.
 - PHP as required by the target Moodle version.
 
