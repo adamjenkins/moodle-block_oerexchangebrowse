@@ -15,7 +15,8 @@ dependency declared in `version.php`.
 - A search box that submits straight to `local_oerexchange`'s catalogue
   page (`index.php`) with the query pre-filled — the block itself does not
   duplicate any search logic.
-- Up to five of the most recently shared, published resources: the
+- Up to five of the most recently shared, published resources (leaving out
+  any shown only inside collections): the
   resource's cover-image thumbnail, its title (linked to the detail page), a
   short trimmed summary, and the license. Rows read thumbnail-left,
   text-right; a resource with no cover image gets a neutral panel of the
@@ -34,7 +35,7 @@ Then add "OER Exchange: browse" to a Dashboard from the block drawer.
 ## Requirements
 
 - Moodle 5.0–5.3 (`$plugin->supported`).
-- `local_oerexchange` installed on the same site.
+- `local_oerexchange` 1.2.0 (build 2026102000) or later, installed on the same site.
 - PHP as required by the target Moodle version.
 
 ## License

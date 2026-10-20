@@ -31,7 +31,7 @@ $plugin->version   = 2026102000;
 // a site below the tested range install the plugin.
 $plugin->requires  = 2025041400;
 $plugin->supported = [500, 503];
-$plugin->release   = '1.0.5';
+$plugin->release   = '1.0.6';
 $plugin->maturity  = MATURITY_STABLE;
 
 // This block is presentation-layer only: it queries local_oerexchange's own

@@ -1,11 +1,10 @@
-# Release notes — 1.0.5
+# Release notes — 1.0.6
 
-- The Japanese language pack (lang/ja) is no longer included: releases ship the English strings
-  only, as the Moodle Plugins directory expects. Japanese is provided through Moodle's language
-  packs.
-- `composer.json` now requires `moodle/moodle` `^5.0` instead of `>=5.0 <5.4`, so Composer no
-  longer excludes newer Moodle 5.x releases.
-- Continuous integration now tests against the Moodle 5.3 stable branch (MOODLE_503_STABLE)
-  instead of Moodle's development branch.
+- Resources their authors show only inside collections (a feature of OER
+  Exchange 1.2.0) are no longer listed in the block on their own; they stay
+  in their collections.
+- OER Exchange 1.2.0 (build 2026102000) or later is now required, in
+  `version.php` and in `composer.json` (which no longer accepts any version).
 
-No code, database or capability changes. No action is required after upgrading.
+No database or capability changes of this block's own. Upgrade
+`local_oerexchange` first.

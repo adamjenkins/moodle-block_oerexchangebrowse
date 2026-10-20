@@ -3,6 +3,17 @@
 All notable changes to this project are documented in this file, in
 [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [1.0.6] - 2026-10-20
+
+### Changed
+
+- The recent list leaves out resources shown only inside collections, by
+  asking `local_oerexchange`'s `resource_manager::standalone_where()` for the
+  catalogue's own rule.
+- `$plugin->dependencies` on `local_oerexchange` raised from build 2026080102
+  to 2026102000, the build that adds that method; `composer.json`'s
+  constraint on it changes from `*` to `^1.2.0` to match.
+
 ## [1.0.5] - 2026-10-04
 
 ### Changed
