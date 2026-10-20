@@ -272,4 +272,27 @@ final class content_builder_test extends \advanced_testcase {
         $this->assertStringContainsString('Fish &amp; Chips', $content->text);
         $this->assertStringNotContainsString('&amp;amp;', $content->text);
     }
+
+    /**
+     * A resource its authors show only inside collections is left out while
+     * a public collection holds it, by the Exchange's own rule.
+     *
+     * @return void
+     */
+    public function test_a_collection_only_resource_is_left_out(): void {
+        $this->resetAfterTest();
+        $owner = $this->getDataGenerator()->create_user();
+        $only = $this->create_resource(['title' => 'Only in a list', 'collectiononly' => 1]);
+        $plain = $this->create_resource(['title' => 'On its own']);
+        $collection = $this->getDataGenerator()->get_plugin_generator('local_oerexchange')->create_collection([
+            'userid' => (int) $owner->id,
+            'visibility' => \local_oerexchange\local\collection_manager::VISIBILITY_PUBLIC,
+        ]);
+        \local_oerexchange\local\collection_manager::add_item((int) $collection->id, $only, (int) $owner->id);
+
+        $ids = array_map('intval', array_keys(content_builder::get_recent_published(10)));
+
+        $this->assertNotContains($only, $ids);
+        $this->assertContains($plain, $ids);
+    }
 }

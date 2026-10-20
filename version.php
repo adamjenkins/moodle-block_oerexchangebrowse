@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_oerexchangebrowse';
-$plugin->version   = 2026100401;
+$plugin->version   = 2026102000;
 // 2025041400 = the Moodle 5.0 branching version — matches $supported's floor
 // (and composer.json's ">=5.0 <5.4"); was 2024100700 (Moodle 4.5), which let
 // a site below the tested range install the plugin.
@@ -44,4 +44,7 @@ $plugin->maturity  = MATURITY_STABLE;
 // local_oerexchange 1.0.4 (2026080102). With ANY_VERSION the installer would
 // happily pair this block with an older local_oerexchange and the block would
 // then fatal with "Class not found" the first time it rendered a card.
-$plugin->dependencies = ['local_oerexchange' => 2026080102];
+// Raised to 2026102000: the recent list now asks
+// \local_oerexchange\local\resource_manager::standalone_where(), which that
+// build adds, to leave out resources shown only inside collections.
+$plugin->dependencies = ['local_oerexchange' => 2026102000];

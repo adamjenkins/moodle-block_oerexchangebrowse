@@ -28,15 +28,24 @@ class content_builder {
     /**
      * Fetch the most recently shared published resources from the catalogue.
      *
+     * Leaves out resources their authors chose to show only inside
+     * collections, by the Exchange's own rule rather than a copy of it:
+     * resource_manager::standalone_where() also knows when that choice does
+     * not apply (the resource is in no public collection) and when the
+     * column is not in the database yet.
+     *
      * @param int $limit maximum number of resources to return
      * @return \stdClass[] rows from local_oerexchange_resources, newest first
      */
     public static function get_recent_published(int $limit = 5): array {
         global $DB;
 
-        return $DB->get_records(
+        [$standalone, $standaloneparams] = \local_oerexchange\local\resource_manager::standalone_where();
+
+        return $DB->get_records_select(
             'local_oerexchange_resources',
-            ['status' => 'published'],
+            'status = :status AND ' . $standalone,
+            ['status' => 'published'] + $standaloneparams,
             // The id DESC tiebreaker: rows shared in the same second would
             // otherwise render in DB-engine-dependent order.
             'timeshared DESC, id DESC',
