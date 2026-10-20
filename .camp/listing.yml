@@ -24,6 +24,6 @@ labels:
 links:
   docs: https://github.com/adamjenkins/moodle-block_oerexchangebrowse#readme
   issues: https://github.com/adamjenkins/moodle-block_oerexchangebrowse/issues
-# screenshots:
-#   - path: .camp/screenshots/overview.png
-#     caption: Main view
+screenshots:
+  - path: .camp/screenshots/01-dashboard.png
+    caption: "A search box and the most recently shared resources, on the Dashboard."
