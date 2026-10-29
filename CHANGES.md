@@ -1,6 +1,6 @@
-# Release notes — 1.0.7
+# Release notes — 1.0.8
 
-- The camp listing (`.camp/listing.yml`) now carries screenshots with captions. They are
-  excluded from the plugin ZIP.
+- CI now also tests Moodle 5.1 (`MOODLE_501_STABLE`), which the plugin has always declared
+  supported.
 
 No code, database or capability changes.
